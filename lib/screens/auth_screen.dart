@@ -27,7 +27,7 @@ class _AuthScreenState extends State<AuthScreen> {
             children: [
               Expanded(
                 flex: 1,
-                child: VideoSlider(),
+                child: PhotoSlider(),
               ),
               SizedBox(width: 10),
               Expanded(
