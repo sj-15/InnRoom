@@ -12,8 +12,11 @@ class _PhotoSliderState extends State<PhotoSlider> {
   final PageController _pageController = PageController();
   int _currentPage = 0;
   final List<String> photoUrls = [
-    'https://www.pexels.com/photo/palm-trees-at-night-258154/',
-    'https://www.pexels.com/photo/house-on-body-of-water-1450363/',
+    'https://images.pexels.com/photos/3887985/pexels-photo-3887985.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
+    'https://images.pexels.com/photos/1743231/pexels-photo-1743231.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
+    'https://images.pexels.com/photos/2373201/pexels-photo-2373201.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
+    'https://images.pexels.com/photos/1134176/pexels-photo-1134176.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
+    'https://images.pexels.com/photos/1450363/pexels-photo-1450363.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
   ];
   @override
   void initState() {
@@ -48,21 +51,27 @@ class _PhotoSliderState extends State<PhotoSlider> {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(4),
-      height: 200, // Adjust the height as needed
-      child: PageView.builder(
-        controller: _pageController,
-        itemCount: photoUrls.length,
-        onPageChanged: (index) {
-          setState(() {
-            _currentPage = index;
-          });
-        },
-        itemBuilder: (context, index) {
-          return Image.network(
-            photoUrls[index],
-            fit: BoxFit.cover,
-          );
-        },
+      // Adjust the height as needed
+      child: ClipRRect(
+        borderRadius: const BorderRadius.only(
+          topLeft: Radius.circular(20),
+          bottomLeft: Radius.circular(20),
+        ),
+        child: PageView.builder(
+          controller: _pageController,
+          itemCount: photoUrls.length,
+          onPageChanged: (index) {
+            setState(() {
+              _currentPage = index;
+            });
+          },
+          itemBuilder: (context, index) {
+            return Image.network(
+              photoUrls[index],
+              fit: BoxFit.cover,
+            );
+          },
+        ),
       ),
     );
   }
