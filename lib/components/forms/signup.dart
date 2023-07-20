@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:innroom/screens/home_screen.dart';
-
+import '../../models/usermodel.dart';
 import '../../widgets/custom_textfield.dart';
 import '../../widgets/custombutton.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class SignUpForm extends StatefulWidget {
   static String routeName = '/signUp';
@@ -16,6 +18,94 @@ class _SignUpFormState extends State<SignUpForm> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+
+  void _handleSignUp() async {
+    // Get user input from text fields
+    String name = _nameController.text;
+    String email = _emailController.text;
+    String password = _passwordController.text;
+
+    // Create a UserModel object without the uid
+    UserModel newUser = UserModel(
+      name: name,
+      email: email,
+      password: password,
+    );
+
+    // Convert UserModel object to a map
+    Map<String, dynamic> userMap = newUser.toMap();
+
+    // Send the signup request to the server
+    try {
+      final response = await http.post(
+        Uri.parse('http://localhost:3000/signup'),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode(userMap),
+      );
+
+      if (response.statusCode == 201) {
+        // Signup successful, extract the uid from the response
+
+        // Update the UserModel object with the correct uid
+        newUser = UserModel(
+          name: name,
+          email: email,
+          password: password,
+        );
+
+        // Navigate to the home screen
+        // ignore: use_build_context_synchronously
+        Navigator.pushNamed(context, HomeScreen.routeName);
+      } else if (response.statusCode == 409) {
+        // User already exists, show error message
+        // ignore: use_build_context_synchronously
+        showDialog(
+          context: context,
+          builder: (_) => AlertDialog(
+            title: const Text('Error'),
+            content: const Text('Email is already available! Please login.'),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: const Text('OK'),
+              ),
+            ],
+          ),
+        );
+      } else {
+        // Other status codes, show error message
+        // ignore: use_build_context_synchronously
+        showDialog(
+          context: context,
+          builder: (_) => AlertDialog(
+            title: const Text('Error'),
+            content: const Text('An error occurred during registration!'),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: const Text('OK'),
+              ),
+            ],
+          ),
+        );
+      }
+    } catch (e) {
+      // Network or server error, show error message
+      showDialog(
+        context: context,
+        builder: (_) => AlertDialog(
+          title: const Text('Error'),
+          content: const Text('An error occurred!'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('OK'),
+            ),
+          ],
+        ),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -56,7 +146,7 @@ class _SignUpFormState extends State<SignUpForm> {
           height: 10,
         ),
         CustomGradientButton(
-          onPressed: () => Navigator.pushNamed(context, HomeScreen.routeName),
+          onPressed: _handleSignUp,
           gradientColors: [
             Colors.deepPurpleAccent,
             const Color(0xFF06ACDA).withOpacity(0.9),
