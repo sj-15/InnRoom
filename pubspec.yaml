@@ -37,6 +37,11 @@ dependencies:
   cupertino_icons: ^1.0.2
   video_player: ^2.7.0
   http: ^1.1.0
+  intl: ^0.18.1
+  syncfusion_flutter_datepicker: ^22.1.39
+  flutter_page_view_indicator: ^0.0.5
+  page_view_indicators: ^2.0.0
+  firebase_core: ^2.15.0
 
 dev_dependencies:
   flutter_test:
