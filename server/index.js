@@ -5,7 +5,7 @@ const cors = require('cors')
 const bodyParser = require('body-parser')
 const mongoose = require('mongoose')
 
-mongoose.connect("mongodb://localhost:27017/innroomdb")
+mongoose.connect("mongodb+srv://sj15sourav:eNUhQ6xYob2hWmUK@innroom.e5b9tll.mongodb.net/")
 
 app.use(cors())
 app.use(bodyParser.urlencoded({extended:true}))

@@ -9,7 +9,7 @@ class PhotoSlider extends StatefulWidget {
 }
 
 class _PhotoSliderState extends State<PhotoSlider> {
-  final PageController _pageController = PageController();
+  PageController? _pageController;
   int _currentPage = 0;
   final List<String> photoUrls = [
     'https://images.pexels.com/photos/3887985/pexels-photo-3887985.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
@@ -18,6 +18,8 @@ class _PhotoSliderState extends State<PhotoSlider> {
     'https://images.pexels.com/photos/1134176/pexels-photo-1134176.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
     'https://images.pexels.com/photos/1450363/pexels-photo-1450363.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
   ];
+  Timer? _autoScrollTimer;
+
   @override
   void initState() {
     super.initState();
@@ -27,19 +29,21 @@ class _PhotoSliderState extends State<PhotoSlider> {
 
   @override
   void dispose() {
-    _pageController.dispose();
+    // Cancel the auto-scrolling timer before disposing of the widget
+    _autoScrollTimer?.cancel();
+    _pageController?.dispose();
     super.dispose();
   }
 
   void _startAutoScroll() {
     // Set up a timer to auto-scroll every 3 seconds (adjust as needed)
-    Timer.periodic(const Duration(seconds: 3), (timer) {
+    _autoScrollTimer = Timer.periodic(const Duration(seconds: 3), (timer) {
       if (_currentPage < photoUrls.length - 1) {
         _currentPage++;
       } else {
         _currentPage = 0;
       }
-      _pageController.animateToPage(
+      _pageController?.animateToPage(
         _currentPage,
         duration: const Duration(milliseconds: 500),
         curve: Curves.easeInOut,
